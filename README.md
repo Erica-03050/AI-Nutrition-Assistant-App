@@ -1,61 +1,61 @@
 # AI Nutritionist Assistant 🥗
 
-这是一个基于AI的智能营养师助手应用，可以帮助用户实现健康饮食和体重管理目标。
+An AI-powered nutritionist assistant that helps users achieve their healthy eating and weight management goals through personalized guidance and real-time food recognition.
 
-## 功能特点
+## Features
 
-- 💬 智能对话：与AI营养师进行自然对话，获取专业建议
-- 📸 食物识别：上传食物图片自动识别营养成分
-- 📊 健康追踪：实时监控BMI、基础代谢率等健康指标
-- 🎯 个性化建议：根据用户目标提供定制化的饮食建议
+- 💬 **Smart Chat**: Natural conversations with an AI nutritionist for professional advice
+- 📸 **Food Recognition**: Upload food images for automatic nutrition analysis
+- 📊 **Health Tracking**: Real-time monitoring of BMI, BMR, and other health metrics
+- 🎯 **Personalized Guidance**: Customized dietary recommendations based on your goals
 
-## 主要功能
+## Core Functions
 
-1. 个人信息管理
-   - 设置年龄、性别、身高、体重等基本信息
-   - 设定目标体重和期望达成时间
-   - 选择日常活动水平
+1. Personal Profile Management
+   - Set age, gender, height, and weight
+   - Define target weight and timeline
+   - Select daily activity level
 
-2. 健康指标追踪
-   - BMI计算和分类
-   - 基础代谢率(BMR)计算
-   - 每日消耗热量估算
-   - 推荐摄入热量计算
+2. Health Metrics Tracking
+   - BMI calculation and classification
+   - Basal Metabolic Rate (BMR) computation
+   - Daily calorie expenditure estimation
+   - Recommended calorie intake calculation
 
-3. AI营养师对话
-   - 智能理解用户需求
-   - 提供专业营养建议
-   - 回答健康饮食相关问题
+3. AI Nutritionist Chat
+   - Intelligent understanding of user needs
+   - Professional nutrition advice
+   - Answers to diet-related questions
 
-4. 食物识别
-   - 上传食物图片自动识别
-   - 获取营养成分信息
-   - 提供相关饮食建议
+4. Food Recognition
+   - Automatic food identification from images
+   - Detailed nutritional information
+   - Personalized dietary recommendations
 
-## 技术栈
+## Tech Stack
 
 - Frontend: Streamlit
 - Backend: Python
 - AI Services: 
-  - 火山引擎 AI 对话服务
-  - 百度 AI 图像识别
+  - Volcano Engine AI Chat Service
+  - Baidu AI Image Recognition
   - Nutritionix API
 
-## 安装说明
+## Installation
 
-1. 克隆项目：
+1. Clone the repository:
 ```bash
 git clone [your-repository-url]
 cd ai-nutritionist-assistant
 ```
 
-2. 安装依赖：
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. 配置环境变量：
-创建 .env 文件并添加以下配置：
+3. Configure environment variables:
+Create a `.env` file and add the following:
 ```
 # Baidu AI API Keys
 BAIDU_API_KEY=your_baidu_api_key
@@ -70,25 +70,23 @@ VOLCANO_API_KEY=your_volcano_api_key
 VOLCANO_MODEL_EP=your_volcano_model_ep
 ```
 
-请确保替换上述配置中的占位符为实际的API密钥。
-
-4. 运行应用：
+4. Run the application:
 ```bash
 streamlit run app.py
 ```
 
-## 使用说明
+## Usage Guide
 
-1. 首次使用时，在侧边栏填写个人信息
-2. 通过聊天框与AI营养师对话
-3. 可以上传食物图片获取营养信息
-4. 查看健康指标了解身体状况
+1. Fill in your personal information in the sidebar
+2. Chat with the AI nutritionist through the chat interface
+3. Upload food images for nutrition analysis
+4. Monitor your health metrics in real-time
 
-## 注意事项
+## Important Notes
 
-- 本应用提供的建议仅供参考，不能替代专业医生的意见
-- 请确保提供真实的个人信息以获得更准确的建议
-- 图片识别功能需要清晰的食物图片才能准确识别
+- The advice provided by this application is for reference only and should not replace professional medical advice
+- Please provide accurate personal information for better recommendations
+- Food recognition requires clear images for accurate results
 
 ## License
 
