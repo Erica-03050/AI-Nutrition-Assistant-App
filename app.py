@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import logging
 import streamlit as st
@@ -315,7 +316,7 @@ def main():
 
     # 在AI对话部分修改
     def format_chat_message(message):
-        """式化聊天消息���去除必的图引用"""
+        """式化聊天消息去除必的图引用"""
         if message["role"] == "user":
             # 如果是图片上传消息，使用特殊格式
             if "image" in message:
