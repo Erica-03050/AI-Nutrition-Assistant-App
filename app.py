@@ -12,17 +12,33 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 直接从 st.secrets 获取环境变量并设置
-if 'VOLCANO_API_KEY' in st.secrets:
-    os.environ['VOLCANO_API_KEY'] = st.secrets['VOLCANO_API_KEY']
-    os.environ['VOLCANO_MODEL_EP'] = st.secrets['VOLCANO_MODEL_EP']
-    os.environ['BAIDU_API_KEY'] = st.secrets['BAIDU_API_KEY']
-    os.environ['BAIDU_SECRET_KEY'] = st.secrets['BAIDU_SECRET_KEY']
-    os.environ['NUTRITIONIX_APP_ID'] = st.secrets['NUTRITIONIX_APP_ID']
-    os.environ['NUTRITIONIX_APP_KEY'] = st.secrets['NUTRITIONIX_APP_KEY']
-else:
-    # 如果没有 secrets，尝试从 .env 文件加载
-    load_dotenv()
+# 加载环境变量
+load_dotenv()
+
+# 尝试从不同来源加载环境变量
+required_vars = [
+    'VOLCANO_API_KEY',
+    'VOLCANO_MODEL_EP',
+    'BAIDU_API_KEY',
+    'BAIDU_SECRET_KEY',
+    'NUTRITIONIX_APP_ID',
+    'NUTRITIONIX_APP_KEY'
+]
+
+# 尝试从 Streamlit secrets 获取环境变量
+for var in required_vars:
+    if var not in os.environ:  # 如果环境变量还没有设置
+        try:
+            os.environ[var] = st.secrets[var]
+        except:
+            st.error(f"Missing {var}. Please set it in Streamlit secrets or .env file")
+            st.stop()
+
+# 显示环境变量状态（调试用）
+st.write("Environment variables status:")
+for var in required_vars:
+    value = os.getenv(var)
+    st.write(f"{var}: {'✅ Set' if value else '❌ Missing'}")
 
 # 检查环境变量
 required_vars = {
@@ -299,7 +315,7 @@ def main():
 
     # 在AI对话部分修改
     def format_chat_message(message):
-        """式化聊天消息，去除必的图片引用"""
+        """式化聊天消息���去除必的图引用"""
         if message["role"] == "user":
             # 如果是图片上传消息，使用特殊格式
             if "image" in message:
