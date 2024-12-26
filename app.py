@@ -1,19 +1,26 @@
-import sys
 import os
 from pathlib import Path
 import logging
 import streamlit as st
+import os
 from dotenv import load_dotenv
-import asyncio
-import hashlib
-import time
-
-# 获取当前文件的目录
-current_dir = os.path.dirname(os.path.abspath(__file__))
-env_path = os.path.join(current_dir, '.env')
 
 # 加载环境变量
-load_dotenv(env_path)
+load_dotenv()
+
+# 如果在 Streamlit Cloud 上运行，从 secrets 获取环境变量
+if not os.getenv('VOLCANO_API_KEY'):
+    os.environ['VOLCANO_API_KEY'] = st.secrets['VOLCANO_API_KEY']
+if not os.getenv('VOLCANO_MODEL_EP'):
+    os.environ['VOLCANO_MODEL_EP'] = st.secrets['VOLCANO_MODEL_EP']
+if not os.getenv('BAIDU_API_KEY'):
+    os.environ['BAIDU_API_KEY'] = st.secrets['BAIDU_API_KEY']
+if not os.getenv('BAIDU_SECRET_KEY'):
+    os.environ['BAIDU_SECRET_KEY'] = st.secrets['BAIDU_SECRET_KEY']
+if not os.getenv('NUTRITIONIX_APP_ID'):
+    os.environ['NUTRITIONIX_APP_ID'] = st.secrets['NUTRITIONIX_APP_ID']
+if not os.getenv('NUTRITIONIX_APP_KEY'):
+    os.environ['NUTRITIONIX_APP_KEY'] = st.secrets['NUTRITIONIX_APP_KEY']
 
 # 必须在任何其他st命令之前设置页面配置
 st.set_page_config(
@@ -292,7 +299,7 @@ def main():
         if formatted_message is not None:
             with st.chat_message(message["role"]):
                 if "image" in message:
-                    st.image(message["image"], caption="上传的食物图片")
+                    st.image(message["image"], caption="上传的���物图片")
                 st.markdown(formatted_message)
 
     # 聊天输入
