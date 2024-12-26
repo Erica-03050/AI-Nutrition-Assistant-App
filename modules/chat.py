@@ -1,7 +1,7 @@
 import os
 import requests
 import json
-from volcenginesdkarkruntime import Ark
+from volcengine.ark import Ark
 from datetime import datetime
 from dotenv import load_dotenv
 
