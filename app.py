@@ -2,25 +2,7 @@ import os
 from pathlib import Path
 import logging
 import streamlit as st
-import os
 from dotenv import load_dotenv
-
-# 加载环境变量
-load_dotenv()
-
-# 如果在 Streamlit Cloud 上运行，从 secrets 获取环境变量
-if not os.getenv('VOLCANO_API_KEY'):
-    os.environ['VOLCANO_API_KEY'] = st.secrets['VOLCANO_API_KEY']
-if not os.getenv('VOLCANO_MODEL_EP'):
-    os.environ['VOLCANO_MODEL_EP'] = st.secrets['VOLCANO_MODEL_EP']
-if not os.getenv('BAIDU_API_KEY'):
-    os.environ['BAIDU_API_KEY'] = st.secrets['BAIDU_API_KEY']
-if not os.getenv('BAIDU_SECRET_KEY'):
-    os.environ['BAIDU_SECRET_KEY'] = st.secrets['BAIDU_SECRET_KEY']
-if not os.getenv('NUTRITIONIX_APP_ID'):
-    os.environ['NUTRITIONIX_APP_ID'] = st.secrets['NUTRITIONIX_APP_ID']
-if not os.getenv('NUTRITIONIX_APP_KEY'):
-    os.environ['NUTRITIONIX_APP_KEY'] = st.secrets['NUTRITIONIX_APP_KEY']
 
 # 必须在任何其他st命令之前设置页面配置
 st.set_page_config(
@@ -29,6 +11,34 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# 加载环境变量
+load_dotenv()
+
+# 从Streamlit secrets中获取环境变量
+try:
+    # 尝试从secrets中获取
+    secrets = st.secrets.to_dict()
+    for key, value in secrets.items():
+        os.environ[key] = value
+except:
+    # 如果失败，使用本地环境变量
+    pass
+
+# 验证必要的环境变量
+required_env_vars = [
+    'VOLCANO_API_KEY',
+    'VOLCANO_MODEL_EP',
+    'BAIDU_API_KEY',
+    'BAIDU_SECRET_KEY',
+    'NUTRITIONIX_APP_ID',
+    'NUTRITIONIX_APP_KEY'
+]
+
+missing_vars = [var for var in required_env_vars if not os.getenv(var)]
+if missing_vars:
+    st.error(f"Missing required environment variables: {', '.join(missing_vars)}")
+    st.stop()
 
 # 获取项目根目录的绝对路径
 ROOT_DIR = Path(__file__).resolve().parent
@@ -299,7 +309,7 @@ def main():
         if formatted_message is not None:
             with st.chat_message(message["role"]):
                 if "image" in message:
-                    st.image(message["image"], caption="上传的���物图片")
+                    st.image(message["image"], caption="上传的物图片")
                 st.markdown(formatted_message)
 
     # 聊天输入
