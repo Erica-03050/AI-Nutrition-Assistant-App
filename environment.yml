@@ -1,0 +1,15 @@
+name: nutrition_app
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - streamlit>=1.24.0
+  - pandas>=1.5.3
+  - numpy>=1.24.3
+  - requests>=2.31.0
+  - plotly>=5.15.0
+  - pip
+  - pip:
+    - volcenginesdkarkruntime>=1.0.0
+    - pyperclip>=1.8.2 

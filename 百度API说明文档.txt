@@ -1,0 +1,878 @@
+简介
+更新时间：2024-12-13
+Hi，您好，欢迎使用百度图像识别API服务。
+本文档主要针对API开发者，描述百度图像识别接口服务的相关技术内容。如果您对文档内容有任何疑问，可以通过以下几种方式联系我们：
+在百度智能云控制台内提交工单；进入AI社区交流 ；提交合作咨询
+接口能力
+图像识别接口一览表
+接口名称	接口能力简要描述
+通用物体和场景识别	识别图片中的场景及物体标签，支持10w+标签类型。
+图像单主体检测	识别图像中的主体具体坐标位置。
+动物识别	检测用户上传的动物图片，返回动物名称、置信度信息。
+植物识别	检测用户上传的植物图片，返回植物名称、置信度信息。
+logo识别	识别图片中包含的商品LOGO信息，返回LOGO品牌名称、在图片中的位置、置信度。
+果蔬识别	检测用户上传的果蔬类图片，返回果蔬名称、置信度信息。
+图像多主体检测	检测出图片中多个主体，并给出位置、标签和置信得分。
+图像内容理解	多维度识别与理解图片内容，包括人、物、行为、场景、文字等，输出对图片内容的描述。
+货币识别	识别图像中的货币类型，返回货币名称、代码、面值、年份信息，可识别百余种国内外常见货币。
+菜品识别	检测用户上传的菜品图片，返回具体的菜名、卡路里、置信度信息。
+地标识别	检测用户上传的地标图片，返回地标名称。
+自定义菜品识别	入库自定义的单菜品图，实现上传多菜品图的精准识别，返回具体的菜名、位置、置信度信息
+车辆外观损伤识别	针对常见小汽车车型，识别车辆外观受损部件及损伤类型，可识别数十种车辆部件、五大类外观损伤（刮擦、凹陷、开裂、褶皱、穿孔）。
+车辆属性识别	检测图像中的各类车辆，并针对小汽车识别11种外观属性，包括：是否有车窗雨眉、是否有车顶架、副驾驶是否有人等。
+车辆检测	检测图片中出现的所有车辆，返回车辆类型与位置，可识别小汽车、卡车、巴士、摩托车、三轮车5类车辆。
+车型识别	检测用户上传的车辆图片，识别所属车型，包括车辆品牌及具体型号、颜色、年份、位置信息。
+请求格式
+POST方式调用
+注意：Content-Type为application/x-www-form-urlencoded，然后通过urlencode格式化请求体。
+返回格式
+JSON格式
+请求限制
+请求图片需经过base64编码：图片的base64编码指将一副图片数据编码成一串字符串，使用该字符串代替图像地址。您可以首先得到图片的二进制，然后用Base64格式编码即可。
+注意：图片的base64编码是不包含图片头的，如（data:image/jpg;base64,）
+请求格式支持：PNG、JPG、JPEG、BMP
+接口名称	图片编码后大小限额
+通用物体和场景识别	base64编码后大小不超过4M，最短边至少30px，最长边最大4096px，长宽比3：1以内
+图像单主体检测	base64编码后大小不超过4M，最短边至少20px，最长边最大4096px，长宽比3：1以内
+动物识别	base64编码后大小不超过4M，最短边至少15px，最长边最大4096px，长宽比3：1以内
+植物识别	base64编码后大小不超过4M，最短边至少15px，最长边最大4096px，长宽比3：1以内
+logo识别	base64编码后大小不超过4M，最短边至少15px，最长边最大4096px，长宽比3：1以内
+果蔬识别	base64编码后大小不超过4M，最短边至少15px，最长边最大4096px，长宽比3：1以内
+图像多主体检测	base64编码后大小不超过4M，最短边至少64px，最长边最大4096px，长宽比3：1以内
+图像内容理解	base64 编码大小不超过 10M，最短边至少 64px，最长边最大 8192px，长宽比3：1以内
+货币识别	base64编码后大小不超过4M，最短边至少15px，最长边最大4096px，长宽比3：1以内
+菜品识别	base64编码后大小不超过4M，最短边至少15px，最长边最大4096px，长宽比3：1以内
+地标识别	base64编码后大小不超过4M，最短边至少15px，最长边最大4096px，长宽比3：1以内
+自定义菜品识别	base64编码后大小不超过4M，最短边至少300px，最长边最大3000px，长宽比3：1以内
+车辆外观损伤识别	base64编码后大小不超过4M，最短边至少50px，最长边最大4096px，长宽比3：1以内
+车辆属性识别	base64编码后大小不超过4M，最短边至少50px，最长边最大4096px，长宽比3：1以内
+车辆检测	base64编码后大小不超过4M，最短边至少50px，最长边最大4096px，长宽比3：1以内
+车型识别	base64编码后大小不超过4M，最短边至少50px，最长边最大4096px，长宽比3：1以内
+
+
+
+
+调用AI服务相关的API接口有两种调用方式，两种不同的调用方式采用相同的接口URL。
+区别在于请求方式和鉴权方法不一样，请求参数和返回结果一致。
+调用方式一
+请求URL数据格式
+向API服务地址使用POST发送请求，必须在URL中带上参数：
+access_token: 必须参数，参考“Access Token获取”。
+注意：access_token的有效期为30天，需要每30天进行定期更换；
+POST中参数按照API接口说明调用即可。
+例如菜品识别API，使用HTTPS POST发送：
+https://aip.baidubce.com/rest/2.0/image-classify/v2/dish?access_token=24.f9ba9c5241b67688bb4adbed8bc91dec.2592000.1485570332.282335-8574074
+获取access_token示例代码
+bash
+PHP
+Java
+Python
+CPP
+C#
+Node
+#!/bin/bashcurl -i -k 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=【百度云应用的AK】&client_secret=【百度云应用的SK】'
+说明：方式一鉴权使用的Access_token必须通过API Key和Secret Key获取。
+调用方式二
+请求头域内容
+在请求的HTTP头域中包含以下信息：
+host（必填）
+x-bce-date （必填）
+x-bce-request-id（选填）
+authorization（必填）
+content-type（必填）
+content-length（选填）
+作为示例，以下是一个标准的图像识别的请求头域内容:
+POST /rest/2.0/image-classify/v2/dish HTTP/1.1accept-encoding: gzip, deflatex-bce-date: 2015-03-24T13:02:00Zconnection: keep-aliveaccept: */*host: aip.baidubce.comx-bce-request-id: 73c4e74c-3101-4a00-bf44-fe246959c05econtent-type: application/x-www-form-urlencodedauthorization: bce-auth-v1/46bd9968a6194b4bbdf0341f2286ccce/2015-03-24T13:02:00Z/1800/host;x-bce-date/994014d96b0eb26578e039fa053a4f9003425da4bfedf33f4790882fb4c54903
+说明：方式二鉴权使用的API认证机制authorization必须通过百度智能云的AK/SK生成。
+
+组合接口API
+更新时间：2024-12-09
+接口描述
+提供一个API接口，同时调用多个模型服务。支持图像识别的多个接口：通用物体和场景识别、图像单主体检测、动物识别、植物识别、果蔬识别、自定义菜品识别-检索、菜品识别、红酒识别、货币识别、地标识别、图像多主体检测等12个模型服务的调用。可通过入参灵活指定需要调用的模型服务，传入图像，返回指定模型的识别结果。
+组合服务接口根据请求参数确定要使用的模型服务类型，具体的请求参数和返回结果见下方描述。
+图像识别相关接口同时提供独立的服务接口，针对每个模型的出入参，可参考百度AI开放平台官网每个独立服务接口的文档。
+接口使用说明
+请求示例
+HTTP 方法：POST
+请求URL： https://aip.baidubce.com/api/v1/solution/direct/imagerecognition/combination
+URL参数：
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+参数	值
+Content-Type	application/json;charset=utf-8
+Body中放置请求参数，参数详情如下：
+请求参数
+参数	类型	是否必须	说明
+image	string	是	图像数据，base64编码，示例如：/9j/4AAQSkZJRgABAQEPMpJkR0FdXVridlPy/9k=
+imgUrl	string	否	图像Url，和image参数二选一，不需要urlEncode，示例如：https://aip.bdstatic.com/portal-pc-node/dist/1591263471100/images/technology/imagerecognition/general/1.jpg
+scenes	array	是	指定本次调用的模型服务，以字符串数组表示。元素含义如下：
+advanced_general：通用物体和场景识别
+object_detect：图像单主体检测
+multi_object_detect：图像多主体检测
+animal：动物识别
+plant：植物识别
+ingredient：果蔬识别
+dish_search：自定义菜品识别-检索
+dishs：菜品识别
+red_wine：红酒识别
+currency：货币识别
+landmark：地标识别
+示例如：“scenes”:[“currency”,”animal”,”plant”]
+sceneConf	jsonObject	否	对特定服务，支持的个性化参数，若不填则使用默认设置。jsonObject说明：
+
+key为要设置入参的服务类型，可取值同scenes字段，例如：
+advanced_general：通用物体和场景识别
+object_detect：图像单主体检测
+
+value为各模型服务个性化参数，详情请参照下文或百度AI开放平台官网“图像识别具体接口文档”
+请求Body示例：
+{	// image 与 imgUrl二选其一
+	"image": "/9j/4AAQSkZJRgABAQEPMJkR0FdXVridlPy/9k=",
+	"scenes": ["animal","plant","ingredient","dishs", "red_wine","currency","landmark"], 
+	"sceneConf": { // 可不填写
+		"advanced_general": {}, // 可不填写
+		"animal": {
+			"top_num": "3",
+			"baike_num": "3"
+		}
+	}
+}
+请求示例代码
+提示一：使用示例代码前，请记得替换其中的示例Token、图像地址或Base64信息。
+提示二：部分语言依赖的类或库，请在代码注释中查看下载地址。
+bash
+PHP
+Java
+Python
+CPP
+C#
+#图像识别组合APIcurl -i -k 'https://aip.baidubce.com/api/v1/solution/direct/imagerecognition/combination?access_token=【调用鉴权接口获取的token】' --data '{"imgUrl":"【网络图片地址】","scenes":["animal","plant","ingredient","dishs", "red_wine","currency","landmark"]}' -H 'Content-Type:application/json; charset=UTF-8'
+返回说明
+返回参数
+字段	类型	是否必须	说明
+log_id	uint64	是	唯一的log id，用于问题定位。
+result	object	是	返回结果json串，其内包含要调用的各个模型服务的返回结果。
+advanced_general	object	否	「通用物体和场景识别」服务返回结果。请参照“通用物体和场景识别接口文档”
+object_detect	object	否	「图像单主体检测」服务返回结果。请参照“图像单主体检测接口文档”
+multi_object_detect	object	否	「图像多主体检测」服务返回结果。请参照“图像多主体检测接口文档”
+animal	object	否	「动物识别」服务返回结果。请参照“动物识别接口文档”
+plant	object	否	「植物识别」服务返回结果。请参照“植物识别接口文档”
+ingredient	object	否	「果蔬识别」服务返回结果。请参照“果蔬识别接口文档”
+dish_search	object	否	「自定义菜品识别-检索」服务返回结果。请参照“自定义菜品识别-检索接口文档”
+dishs	object	否	「菜品识别」服务返回结果。请参照“菜品识别接口文档”
+red_wine	object	否	「红酒识别」服务返回结果。请参照“红酒识别接口文档”
+currency	object	否	「货币识别」服务返回结果。请参照“货币识别接口文档”
+landmark	object	否	「地标识别」服务返回结果。请参照“地标识别接口文档”
+
+返回示例
+成功响应示例：
+{
+    "result": {
+        "plant": {
+            "result": [
+                {
+                    "score": 0.4343205690383911,
+                    "name": "非植物"
+                }
+            ],
+            "log_id": 1888121902459717818
+        },
+        "animal": {
+            "result": [
+                {
+                    "score": "0.71102",
+                    "name": "松鼠猴"
+                },
+                {
+                    "score": "0.0548481",
+                    "name": "卷尾猴"
+                },
+                {
+                    "score": "0.0444465",
+                    "name": "蜘蛛猴"
+                },
+                {
+                    "score": "0.041044",
+                    "name": "金丝猴"
+                },
+                {
+                    "score": "0.0377901",
+                    "name": "长尾猴"
+                },
+                {
+                    "score": "0.0176039",
+                    "name": "长臂猿"
+                }
+            ],
+            "log_id": 7358927584635575930
+        }
+    },
+    "log_id": 15904950726810006
+}
+
+失败响应示例：
+{
+    "log_id": 15904942500190005,
+    "error_msg": "service not support",
+    "error_code": 216102
+}
+错误码说明
+错误码	错误信息	描述
+415	not support the media type	请求格式错误，请检查请求参数代码
+216101	not enough param	参数不足
+216102	service not support	输入了不支持的底层服务类型
+216500	unknown error	未知错误
+282801	image and imgUrl are empty	image和imgUrl均为空
+282802	either image and imgUrl has value	image和imgUrl只能有一个有值
+282804	download image error	图片下载失败
+282000	logic internal error	业务逻辑层错误
+
+
+通用物体和场景识别
+更新时间：2024-09-26
+接口描述
+该请求用于通用物体及场景识别，即对于输入的一张图片（可正常解码，且长宽比适宜），输出图片中的多个物体及场景标签。
+
+在线调试
+您可以在 示例代码中心 中调试该接口，可进行签名验证、查看在线调用的请求内容和返回结果、示例代码的自动生成。
+
+请求说明
+请求示例
+
+HTTP 方法：POST
+
+请求URL： https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general
+
+URL参数：
+
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+
+参数	值
+Content-Type	application/x-www-form-urlencoded
+Body中放置请求参数，参数详情如下：
+
+请求参数
+
+参数	是否必选	类型	可选值范围	说明
+image	和url二选一	string	-	图像数据，base64编码，要求base64编码后大小不超过8M，最短边至少15px，最长边最大8192px,支持jpg/png/bmp格式。注意：图片需要base64编码、去掉编码头（data:image/jpg;base64,）后，再进行urlencode。
+url	和image二选一	string	-	图片完整URL，URL长度不超过1024字节，URL对应的图片base64编码后大小不超过8M，最短边至少15px，最长边最大8192px,支持jpg/png/bmp格式，当image字段存在时url字段失效。
+baike_num	否	integer	-	用于控制返回结果是否带有百科信息，若不输入此参数，则默认不返回百科结果；若输入此参数，会根据输入的整数返回相应个数的百科信息
+请求代码示例
+
+提示一：使用示例代码前，请记得替换其中的示例Token、图片地址或Base64信息。
+
+提示二：部分语言依赖的类或库，请在代码注释中查看下载地址。
+
+bash
+PHP
+Java
+Python
+CPP
+C#
+curl -i -k 'https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general?access_token=【调用鉴权接口获取的token】' --data 'image=【图片Base64编码，需UrlEncode】' -H 'Content-Type:application/x-www-form-urlencoded'
+返回说明
+返回参数
+
+字段	是否必选	类型	说明
+log_id	是	uint64	唯一的log id，用于问题定位
+result_num	是	unit32	返回结果数目，及result数组中的元素个数，最多返回5个结果
+result	是	arrry(object)	标签结果数组
++keyword	是	string	图片中的物体或场景名称
++score	是	float	置信度，0-1
++root	是	string	识别结果的上层标签，有部分钱币、动漫、烟酒等tag无上层标签
++baike_info	否	object	对应识别结果的百科词条名称
+++baike_url	否	string	对应识别结果百度百科页面链接
+++image_url	否	string	对应识别结果百科图片链接
+++description	否	string	对应识别结果百科内容描述
+返回示例
+
+HTTP/1.1 200 OK
+x-bce-request-id: 73c4e74c-3101-4a00-bf44-fe246959c05e
+Cache-Control: no-cache
+Server: BWS
+Date: Tue, 18 Oct 2016 02:21:01 GMT
+Content-Type: application/json;charset=UTF-8
+{
+	"log_id": 327863200205075661,
+	"result_num": 5,
+	"result": [{
+		"score": 0.967622,
+		"root": "公众人物",
+		"baike_info": {
+			"baike_url": "http://baike.baidu.com/item/%E6%96%B0%E5%9E%A3%E7%BB%93%E8%A1%A3/8035884",
+			"image_url": "http://imgsrc.baidu.com/baike/pic/item/91ef76c6a7efce1b27893518a451f3deb58f6546.jpg",
+			"description": "新垣结衣(Aragaki Yui)，1988年6月11日出生于冲绳县那霸市。日本女演员、歌手、模特。毕业于日出高中。2001年，参加《nicola》模特比赛并获得最优秀奖。2005年，因出演现代剧《涩谷15》而作为演员出道。2006年，参演校园剧《我的老大，我的英雄》；同年，她还出版了个人首本写真集《水漾青春》。2007年，她从日出高校毕业后开始专注于演艺发展，并发表个人首张音乐专辑《天空》；同年，新垣结衣还主演了爱情片《恋空》，而她也凭借该片获得了多个电影新人奖项。2010年，主演爱情片《花水木》。2011年，主演都市剧《全开女孩》。2012年，相继参演现代剧《Legal High》、剧情片《剧场版新参者：麒麟之翼》。2013年，主演都市剧《飞翔情报室》。2014年，她主演了剧情片《黎明的沙耶》。2016年，主演爱情喜剧《逃避虽可耻但有用》，并凭借该剧获得了多个电视剧女主角奖项。2017年，主演爱情片《恋爱回旋》，凭借该片获得第60届蓝丝带奖最佳女主角；同年11月，她还凭借医疗剧《Code Blue 3》获得第94届日剧学院赏最佳女配角。"
+		},
+		"keyword": "新垣结衣"
+	},
+	{
+		"score": 0.716067,
+		"root": "人物-人物特写",
+		"keyword": "头发"
+	},
+	{
+		"score": 0.421281,
+		"root": "商品-穿戴",
+		"keyword": "围巾"
+	},
+	{
+		"score": 0.22347,
+		"root": "商品-五金",
+		"keyword": "拉链"
+	},
+	{
+		"score": 0.028031,
+		"root": "商品-穿戴",
+		"keyword": "脖套"
+	}]
+}
+
+
+图像单主体检测
+更新时间：2024-07-31
+接口描述
+用户向服务请求检测图像中的主体位置。
+
+在线调试
+您可以在 示例代码中心 中调试该接口，可进行签名验证、查看在线调用的请求内容和返回结果、示例代码的自动生成。
+
+请求说明
+请求示例
+
+HTTP 方法：POST
+
+请求URL： https://aip.baidubce.com/rest/2.0/image-classify/v1/object_detect
+
+URL参数：
+
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+
+参数	值
+Content-Type	application/x-www-form-urlencoded
+Body中放置请求参数，参数详情如下：
+
+请求参数
+
+参数	是否必选	类型	可选值范围	说明
+image	true	string	-	图像数据，base64编码，要求base64编码后大小不超过4M，最短边至少15px，最长边最大4096px,支持jpg/png/bmp格式 。注意：图片需要base64编码、去掉编码头后再进行urlencode。
+with_face	false	number	-	如果检测主体是人，主体区域是否带上人脸部分，0-不带人脸区域，其他-带人脸区域，裁剪类需求推荐带人脸，检索/识别类需求推荐不带人脸。默认取1，带人脸。
+请求代码示例
+
+提示一：使用示例代码前，请记得替换其中的示例Token、图片地址或Base64信息。
+
+提示二：部分语言依赖的类或库，请在代码注释中查看下载地址。
+
+bash
+PHP
+Java
+Python
+CPP
+C#
+curl -i -k 'https://aip.baidubce.com/rest/2.0/image-classify/v1/object_detect?access_token=【调用鉴权接口获取的token】' --data 'image=【图片Base64编码，需UrlEncode】&with_face=1' -H 'Content-Type:application/x-www-form-urlencoded'
+返回说明
+返回参数
+
+字段	是否必选	类型	说明
+log_id	是	uint64	唯一的log id，用于问题定位
+result	否	watermark-location	裁剪结果
++left	否	uint32	表示定位位置的长方形左上顶点的水平坐标
++top	否	uint32	表示定位位置的长方形左上顶点的垂直坐标
++width	否	uint32	表示定位位置的长方形的宽度，单位px
++height	否	uint32	表示定位位置的长方形的高度，单位px
+返回示例
+
+HTTP/1.1 200 OK
+x-bce-request-id: 73c4e74c-3101-4a00-bf44-fe246959c05e
+Cache-Control: no-cache
+Server: BWS
+Date: Tue, 18 Oct 2016 02:21:01 GMT
+Content-Type: application/json;charset=UTF-8
+{
+  "log_id": 895582300,
+  "result": {
+    "width": 486,
+    "top": 76,
+    "left": 134,
+    "height": 394
+  }
+}
+
+果蔬识别
+更新时间：2023-01-17
+接口描述
+该请求用于识别果蔬类食材，即对于输入的一张图片（可正常解码，且长宽比适宜），输出图片中的果蔬食材结果。
+
+在线调试
+您可以在 示例代码中心 中调试该接口，可进行签名验证、查看在线调用的请求内容和返回结果、示例代码的自动生成。
+
+请求说明
+请求示例
+
+HTTP 方法：POST
+
+请求URL： https://aip.baidubce.com/rest/2.0/image-classify/v1/classify/ingredient
+
+URL参数：
+
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+
+参数	值
+Content-Type	application/x-www-form-urlencoded
+Body中放置请求参数，参数详情如下：
+
+请求参数
+
+参数	是否必选	类型	可选值范围	说明
+image	和url二选一	string	图像数据，base64编码，要求base64编码后大小不超过4M，最短边至少15px，最长边最大4096px,支持jpg/png/bmp格式。注意：图片需要base64编码、去掉编码头（data:image/jpg;base64,）后，再进行urlencode。	
+url	和image二选一	string	图片完整URL，URL长度不超过1024字节，URL对应的图片base64编码后大小不超过4M，最短边至少15px，最长边最大4096px,支持jpg/png/bmp格式，当image字段存在时url字段失效。	
+top_num	否	unit32	返回预测得分top结果数，如果为空或小于等于0默认为5；如果大于20默认20	
+请求代码示例
+
+提示一：使用示例代码前，请记得替换其中的示例Token、图片地址或Base64信息。
+
+提示二：部分语言依赖的类或库，请在代码注释中查看下载地址。
+
+bash
+PHP
+Java
+Python
+CPP
+C#
+curl -i -k 'https://aip.baidubce.com/rest/2.0/image-classify/v1/classify/ingredient?access_token=【调用鉴权接口获取的token】' --data 'image=【图片Base64编码，需UrlEncode】' -H 'Content-Type:application/x-www-form-urlencoded'
+返回说明
+返回参数
+
+字段	是否必选	类型	说明
+log_id	是	uint64	唯一的log id，用于问题定位
+result	是	object()	识别结果
+result_num	否	unit32	识别结果数
++name	否	string	图像中的食材名称
++score	否	double	得分，0-1
+返回示例
+
+HTTP/1.1 200 OK
+x-bce-request-id: 73c4e74c-3101-4a00-bf44-fe246959c05e
+Cache-Control: no-cache
+Server: BWS
+Date: Tue, 18 Oct 2016 02:21:01 GMT
+Content-Type: application/json;charset=UTF-8
+{
+    "log_id": 1091287364,
+    "result_num": 20,
+    "result": [
+        {
+            "name": "非果蔬食材",
+            "score": 0.99999988079071
+        },
+        {
+            "name": "油菜",
+            "score": 1.1175458780599e-8
+        },
+        {
+            "name": "蛇果",
+            "score": 7.2776291659693e-9
+        },
+        {
+            "name": "国光苹果",
+            "score": 5.6971951600815e-9
+        },
+        {
+            "name": "海枣",
+            "score": 4.2508210285064e-9
+        },
+        {
+            "name": "琼瑶浆葡萄",
+            "score": 4.1451895249622e-9
+        },
+        {
+            "name": "京锐号辣椒",
+            "score": 3.9915102334476e-9
+        },
+        {
+            "name": "冬瓜",
+            "score": 3.3611948779821e-9
+        },
+        {
+            "name": "长江豆",
+            "score": 2.9944848822794e-9
+        },
+        {
+            "name": "黑加仑",
+            "score": 2.7750137743254e-9
+        },
+        {
+            "name": "面包果",
+            "score": 2.3357531464541e-9
+        },
+        {
+            "name": "椰子",
+            "score": 1.9741890344704e-9
+        },
+        {
+            "name": "美人瓜",
+            "score": 1.9319581490151e-9
+        },
+        {
+            "name": "莲藕",
+            "score": 1.759222323372e-9
+        },
+        {
+            "name": "黑奥林",
+            "score": 1.7266311713726e-9
+        },
+        {
+            "name": "芥菜",
+            "score": 1.6180708994895e-9
+        },
+        {
+            "name": "样芹菜",
+            "score": 1.5472728653876e-9
+        },
+        {
+            "name": "篙巴",
+            "score": 1.4084827748562e-9
+        },
+        {
+            "name": "花生",
+            "score": 1.3972580870103e-9
+        },
+        {
+            "name": "魁绿猕猴桃",
+            "score": 1.3920842256709e-9
+        }
+    ]
+}
+
+
+图像多主体检测
+更新时间：2023-01-17
+接口描述
+检测出图片中多个主体，并给出位置、标签和置信得分。
+
+在线调试
+您可以在 示例代码中心 中调试该接口，可进行签名验证、查看在线调用的请求内容和返回结果、示例代码的自动生成。
+
+请求说明
+请求示例
+
+HTTP 方法：POST
+
+请求URL： https://aip.baidubce.com/rest/2.0/image-classify/v1/multi_object_detect
+
+URL参数：
+
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+
+参数	值
+Content-Type	application/x-www-form-urlencoded
+Body中放置请求参数，参数详情如下：
+
+请求参数
+
+参数	是否必选	类型	可选值范围	说明
+image	和url二选一	string	-	图像数据，base64编码后进行urlencode，要求base64编码和urlencode后大小不超过4M，最短边至少64px，最长边最大4096px，长宽比3：1以内，支持jpg/png/bmp格式 。注意：图片的base64编码是不包含图片头的，如（data:image/jpg;base64,）去掉编码头后再进行urlencode。
+url	和image二选一	string	-	图片完整URL，URL长度不超过1024字节，URL对应的图片base64编码后大小不超过4M，最短边至少64px，最长边最大4096px，长宽比3：1以内，支持jpg/png/bmp格式，当image字段存在时url字段失效。
+请求代码示例
+
+提示一：使用示例代码前，请记得替换其中的示例Token、图片地址或Base64信息。
+
+提示二：部分语言依赖的类或库，请在代码注释中查看下载地址。
+
+bash
+PHP
+Java
+Python
+CPP
+C#
+# 图像多主体检测
+curl -i -k 'https://aip.baidubce.com/rest/2.0/image-classify/v1/multi_object_detect?access_token=【调用鉴权接口获取的token】' --data 'image=【图片Base64编码，需UrlEncode】' -H 'Content-Type:application/x-www-form-urlencoded'
+返回说明
+返回参数
+
+字段	是否必选	类型	说明
+log_id	是	uint64	唯一的log id，用于问题定位
+result	否	object数组	返回结果
++name	否	string	图片标签
++score	否	float	置信度得分
++location	否	object数组	图中目标主体的检测框位置信息
+++left	否	uint32	表示定位位置的长方形左上顶点的水平坐标
+++top	否	uint32	表示定位位置的长方形左上顶点的垂直坐标
+++width	否	uint32	表示定位位置的长方形的宽度，单位px
+++height	否	uint32	表示定位位置的长方形的高度，单位px
+返回示例
+
+{
+    "log_id": 4160887777964368179,
+    "result": [
+        {
+            "score": 0.8241143226623535,
+            "name": "果蔬生鲜",
+            "location": {
+                "width": 89,
+                "top": 113,
+                "left": 383,
+                "height": 204
+            }
+        },
+        {
+            "score": 0.8606756329536438,
+            "name": "家居家纺",
+            "location": {
+                "width": 112,
+                "top": 105,
+                "left": 139,
+                "height": 203
+            }
+        },
+        {
+            "score": 0.6238403916358948,
+            "name": "食品饮料",
+            "location": {
+                "width": 67,
+                "top": 125,
+                "left": 491,
+                "height": 176
+            }
+        },
+        {
+            "score": 0.10546552389860153,
+            "name": "文化娱乐",
+            "location": {
+                "width": 48,
+                "top": 183,
+                "left": 231,
+                "height": 95
+            }
+        },
+        {
+            "score": 0.7283627986907959,
+            "name": "家居家电",
+            "location": {
+                "width": 72,
+                "top": 89,
+                "left": 285,
+                "height": 244
+            }
+        }
+    ]
+}
+
+图像内容理解
+更新时间：2024-12-06
+接口描述
+该请求用于图像内容理解，支持输入图片和提问信息，多维度识别与理解图片内容，包括人、物、行为、场景、文字等，输出对图片内容的描述。用于图片内容问答，图片打标签，图片物体识别等业务场景。图像内容理解服务涉及 2 个子接口，分别为：
+
+图像内容理解-提交请求：支持传入图片、提问等参数，创建图像内容理解任务，该接口会返回任务ID。
+图像内容理解-获取结果：在任务成功创建后，支持传入任务ID，查看任务处理的状态、获取处理完成后返回的结果。
+图像内容理解-提交请求
+在线调试
+
+您可以在 示例代码中心 中调试该接口，可进行签名验证、查看在线调用的请求内容和返回结果、示例代码的自动生成。
+
+请求示例
+
+HTTP 方法：POST
+
+请求URL： https://aip.baidubce.com/rest/2.0/image-classify/v1/image-understanding/request
+
+URL参数：
+
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+
+参数	值
+Content-Type	application/json
+Body中放置请求参数，要求使用json格式的结构体来描述一个请求的具体内容，参数详情如下：
+
+请求参数
+
+参数	是否必选	类型	可选值范围	说明
+image	和 url 二选一	string	-	图片数据，base64 编码后进行 urlencode，要求 base64 编码和 urlencode 后大小不超过 10M，最短边至少 64px，最长边最大 8192px，支持 jpg/jpeg/png 格式
+优先级：image > url，当 image 字段存在时，url 字段失效
+注意： 超过 4096px 的图片，将被自动等比例压缩至 4096px 进行处理，压缩后会影响处理效果
+url	和 image 二选一	string	-	图片完整 url，url 长度不超过 1024 字节，要求 base64 编码和 urlencode 后大小不超过 10M，最短边至少 64px，最长边最大 8192px，支持 jpg/jpeg/png 格式
+优先级：image > url，当 image 字段存在时，url 字段失效
+注意： 超过 4096px 的图片，将被自动等比例压缩至 4096px 进行处理，压缩后会影响处理效果
+请注意关闭URL防盗链
+question	是	string	-	提问信息，如“这张图片里有什么？”、“图中的人物是谁，并进行简单介绍”
+限制 100 个字符之内
+返回参数
+
+字段	类型	说明
+log_id	uint64	唯一的log id，用于问题定位
+result	object	返回结果列表
++ task_id	string	该请求生成的task_id，后续使用该task_id获取识别结果
+返回示例
+
+{
+    "result": {
+        "task_id": "1826091287582742824"
+    },
+    "log_id": "1826091287582742824"
+}
+图像内容理解-获取结果
+在线调试
+
+您可以在 示例代码中心 中调试该接口，可进行签名验证、查看在线调用的请求内容和返回结果、示例代码的自动生成。
+
+请求示例
+
+HTTP 方法：POST
+
+请求URL：https://aip.baidubce.com/rest/2.0/image-classify/v1/image-understanding/get-result
+
+URL参数：
+
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+
+参数	值
+Content-Type	application/json
+Body中放置请求参数，要求使用json格式的结构体来描述一个请求的具体内容，参数详情如下：
+
+请求参数
+
+参数	是否必选	类型	可选值范围	说明
+task_id	是	string	-	调用提交请求接口时，返回的task_id
+返回参数
+
+字段	类型	说明
+log_id	uint64	唯一的log id，用于问题定位
+result	object	返回结果列表
++ task_id	string	该结果对应请求的task_id
++ ret_code	int	识别状态，0：处理成功；1：处理中
++ ret_msg	string	识别状态信息，success：处理成功；processing：处理中
++ description	string	针对输入的 question 问题，对图片内容进行分析后输出的答案
+返回示例
+
+{
+    "result": {
+        "task_id": "1826091287582742824",
+        "ret_msg": "success",
+        "ret_code": 0,
+        "description": "这张图片展示的是位于中国西藏自治区拉萨市区西北玛布日山上的布达拉宫，它是藏传佛教的宗教圣地，同时也是中国的世界文化遗产之一，以其宏伟的建筑风格和深厚的文化底蕴吸引着无数游客前来参观。"
+    },
+    "log_id": "1826091451221753557"
+}
+
+
+菜品识别
+更新时间：2024-04-09
+接口描述
+该请求用于菜品识别。即对于输入的一张图片（可正常解码，且长宽比适宜），输出图片的菜品名称、卡路里信息、置信度。
+
+在线调试
+您可以在 示例代码中心 中调试该接口，可进行签名验证、查看在线调用的请求内容和返回结果、示例代码的自动生成。
+
+请求说明
+请求示例
+
+HTTP 方法：POST
+
+请求URL： https://aip.baidubce.com/rest/2.0/image-classify/v2/dish
+
+URL参数：
+
+参数	值
+access_token	通过API Key和Secret Key获取的access_token,参考“Access Token获取”
+Header如下：
+
+参数	值
+Content-Type	application/x-www-form-urlencoded
+Body中放置请求参数，参数详情如下：
+
+请求参数
+
+参数	是否必选	类型	说明	
+image	和url二选一	string	图像数据，base64编码，要求base64编码后大小不超过4M，最短边至少15px，最长边最大4096px,支持jpg/png/bmp格式。注意：图片需要base64编码、去掉编码头（data:image/jpg;base64,）后，再进行urlencode。	
+url	和image二选一	string	图片完整URL，URL长度不超过1024字节，URL对应的图片base64编码后大小不超过4M，最短边至少15px，最长边最大4096px,支持jpg/png/bmp格式，当image字段存在时url字段失效。	
+top_num	否	unit32	返回结果top n,默认5.	
+filter_threshold	否	float	默认0.95，可以通过该参数调节识别效果，降低非菜识别率.	
+baike_num	否	integer	用于控制返回结果是否带有百科信息，若不输入此参数，则默认不返回百科结果；若输入此参数，会根据输入的整数返回相应个数的百科信息	
+请求代码示例
+
+提示一：使用示例代码前，请记得替换其中的示例Token、图片地址或Base64信息。
+
+提示二：部分语言依赖的类或库，请在代码注释中查看下载地址。
+
+bash
+PHP
+Java
+Python
+CPP
+C#
+curl -i -k 'https://aip.baidubce.com/rest/2.0/image-classify/v2/dish?access_token=【调用鉴权接口获取的token】' --data 'image=【图片Base64编码，需UrlEncode】&top_num=5' -H 'Content-Type:application/x-www-form-urlencoded'
+返回说明
+返回参数
+
+字段	是否必选	类型	说明
+log_id	是	uint64	唯一的log id，用于问题定位
+result_num	否	unit32	返回结果数目，及result数组中的元素个数
+result	否	array()	菜品识别结果数组
++name	否	string	菜名，示例：鱼香肉丝
++calorie	否	float	卡路里，每100g的卡路里含量
++probability	否	float	识别结果中每一行的置信度值，0-1
++baike_info	否	object	对应识别结果的百科词条名称
+++baike_url	否	string	对应识别结果百度百科页面链接
+++image_url	否	string	对应识别结果百科图片链接
+++description	否	string	对应识别结果百科内容描述
+返回示例
+
+HTTP/1.1 200 OK
+x-bce-request-id: 73c4e74c-3101-4a00-bf44-fe246959c05e
+Cache-Control: no-cache
+Server: BWS
+Date: Tue, 18 Oct 2016 02:21:01 GMT
+Content-Type: application/json;charset=UTF-8
+{
+	"log_id": 7357081719365269362,
+	"result_num": 5,
+	"result": [
+	{
+		"calorie": "119",
+		"has_calorie": true,
+		"name": "酸汤鱼",
+		"probability": "0.396031"
+		"baike_info": {
+			"baike_url": "http://baike.baidu.com/item/%E9%85%B8%E6%B1%A4%E9%B1%BC/1754055",
+			"description": "酸汤鱼，是黔桂湘交界地区的一道侗族名菜，与侗族相邻的苗、水、瑶等少数民族也有相似菜肴，但其中以贵州侗族酸汤鱼最为有名，据考证此菜肴最早源于黎平县雷洞镇牙双一带。制作原料主要有鱼肉、酸汤、山仓子等香料。成菜后，略带酸味、幽香沁人、鲜嫩爽口开胃，是贵州“黔系”菜肴的代表作之一。这道菜通常先自制酸汤，之后将活鱼去掉内脏，入酸汤煮制。"
+		}
+	},
+	{
+		"calorie": "38",
+		"has_calorie": true,
+		"name": "原味黑鱼煲",
+		"probability": "0.265432",
+
+	},
+	{
+		"calorie": "144",
+		"has_calorie": true,
+		"name": "椒鱼片",
+		"probability": "0.0998993"
+	},
+	{
+		"calorie": "98",
+		"has_calorie": true,
+		"name": "酸菜鱼",
+		"probability": "0.0701917"
+	},
+	{
+		"calorie": "257.65",
+		"has_calorie": true,
+		"name": "柠檬鱼",
+		"probability": "0.0471465"
+	}]
+}
+
